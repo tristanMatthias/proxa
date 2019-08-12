@@ -1,6 +1,10 @@
 # Proxa
 Composable, observable objects and arrays.
 
+[![npm](https://img.shields.io/npm/v/proxa.svg)](http://npmjs.com/package/proxa)
+[![Travis](https://img.shields.io/travis/tristanMatthias/proxa.svg)](https://travis-ci.org/tristanMatthias/proxa)
+[![Codecov](https://img.shields.io/codecov/c/github/tristanMatthias/proxa.svg)](https://codecov.io/gh/tristanMatthias/proxa)
+
 ## Outline
 Proxa is a zero dependency, extremely small library (150 lines) that uses ES6 Proxies to deeply watch objects and arrays.
 It uses a callback system that is triggered whenever any property or array element is changed. You can also watch just for a specific property as well.
