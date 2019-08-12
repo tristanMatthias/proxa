@@ -1,0 +1,6 @@
+coverage
+src
+.gitignore
+jest.config.js
+rollup.config.ts
+tsconfig.json

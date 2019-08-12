@@ -1,0 +1,30 @@
+{
+  "name": "proxa",
+  "version": "0.0.1",
+  "description": "Deeply observe objects and arrays with proxies",
+  "main": "proxa.js",
+  "module": "proxa.module.js",
+  "browser": "proxa.browser.js",
+  "repository": "https://github.com/tristanMatthias/proxa",
+  "author": "Tristan Matthias <hello@tristanmatthias.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c ./rollup.config.ts",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.17",
+    "jest-extended": "^0.11.2",
+    "rollup": "^1.19.4",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "rollup-plugin-typescript2": "^0.22.1",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.5.3",
+    "jest": "^24.8.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
