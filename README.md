@@ -1,5 +1,5 @@
 # Proxa
-Composable, observable objects.
+Composable, observable objects and arrays.
 
 ## Outline
 Proxa is a zero dependency, extremely small library (150 lines) that uses ES6 Proxies to deeply watch objects and arrays.
