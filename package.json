@@ -5,6 +5,7 @@
   "main": "proxa.js",
   "module": "proxa.module.js",
   "browser": "proxa.browser.js",
+  "types": "./proxa.d.ts",
   "repository": "https://github.com/tristanMatthias/proxa",
   "author": "Tristan Matthias <hello@tristanmatthias.com>",
   "license": "MIT",

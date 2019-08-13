@@ -1,9 +1,11 @@
 {
+  "include": ["./src/proxa.ts"],
   "compilerOptions": {
     "target": "es6",
     "module": "es2015",
     "strict": true,
     "lib": ["es2016", "es2017.object"],
+    "declaration": true,
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
