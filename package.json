@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c ./rollup.config.ts",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "devDependencies": {
     "@types/jest": "^24.0.17",
