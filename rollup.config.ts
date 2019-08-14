@@ -1,10 +1,11 @@
 // rollup.config.js
 import typescript from 'rollup-plugin-typescript2';
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
-import { terser } from "rollup-plugin-terser";
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
+// tslint:disable no-default-export
 export default {
   input: './src/proxa.ts',
 
@@ -18,10 +19,6 @@ export default {
       format: 'es' // the preferred format
     },
     {
-      // file: pkg.browser,
-      // format: 'iife',
-      // moduleName: 'window',
-      // name: 'proxa'
       name: 'window',
       file: pkg.browser,
       format: 'umd',
@@ -30,16 +27,11 @@ export default {
   ],
 
   plugins: [
-    typescript(/*{ plugin options }*/),
-    // resolve({ //used to resolve NPM module reading from packages.json those entrypoint (ES6 - Main or Browser specific)
-    //   jsnext: true,
-    //   main: true,
-    //   browser: true
-    // }),
+    typescript(),
     resolve(),
     commonjs(),
     terser({
       sourcemap: true
     })
   ]
-}
+};

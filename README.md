@@ -84,7 +84,6 @@ someArr[1] = 'Batman' // Prints 'Greetings, Batman'
 ### Converting back to plain object
 Calling `JSON.stringify(proxa(...))` or `proxa(...).toJSON()` both convert the `proxa` proxy back to a plain object. This is useful for sending via `fetch` to an API for example.
 
-
 ### Nested observing
 Proxa deeply converts all objects and arrays to a proxa whenever they're accessed (not on instantiation). This means that you can compose your callbacks into different components or scenarios.
 
@@ -135,12 +134,8 @@ export class RouterComponent extends Something {
 ## Contributing
 Pull requests and ideas are most welcome. Please send them forward!
 
-
 ## Issues
 If you find a bug, please file an issue on [the issue tracker on GitHub](https://github.com/tristanMatthias/proxa/issues).
 
-
-
 ## Credits
 Proxa is built and maintained by [Tristan Matthias](https://www.github.com/tristanMatthias).
-
