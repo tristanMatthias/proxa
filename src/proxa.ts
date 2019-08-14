@@ -15,7 +15,7 @@ export type ProxyExtended<T> = T & {
   [sParent]?: ProxyExtended<any>
   [sIsArray]: boolean;
   toJSON: () => T
-}
+};
 
 const excludeProps = [
   sIsProxa,
@@ -58,7 +58,7 @@ export const proxa = <T extends object>(
 
     set<K extends keyof T>(target: ProxyExtended<T>, key: K, value: ProxyExtended<T>[K]) {
       // Don't trigger update if the value hasn't changed
-      if (target[key] == value) return true;
+      if (target[key] === value) return true;
 
       target[key] = value;
 
@@ -89,7 +89,7 @@ export const proxa = <T extends object>(
 
       // Update the parent chain
       if (root[sParent]) root[sParent][sUpdate]();
-    }
+    };
 
     if (parent) root[sParent] = parent;
     if (value instanceof Array) root[sIsArray] = true;
@@ -100,7 +100,7 @@ export const proxa = <T extends object>(
       enumerable: false,
       writable: false,
       value: () => {
-        let copy = { ...root };
+        const copy = { ...root };
         excludeProps.forEach(p => delete copy[p as keyof typeof copy]);
 
         Object.entries(copy).forEach(([key, value]) => {
@@ -111,7 +111,7 @@ export const proxa = <T extends object>(
         if (root[sIsArray]) {
           return Object.entries(copy).reduce((arr, [key, v]) => {
             // Only add it if the key is the index of the array (only a number)
-            if (/^\d+$/.test(key)) (arr as Array<any>).push(v);
+            if (/^\d+$/.test(key)) (arr as any[]).push(v);
             return arr;
           }, [] as T);
         }
@@ -136,13 +136,14 @@ export const proxa = <T extends object>(
       let cbs = root[sPropCallbacks].get(cbProperty);
       // If property has never been watched before, initialize the array
       if (!cbs) {
-        cbs = []
+        cbs = [];
         root[sPropCallbacks].set(cbProperty, cbs);
       }
       // Add callback to the property map array
       cbs.push(cb);
     }
   }
+
 
   return root;
 };

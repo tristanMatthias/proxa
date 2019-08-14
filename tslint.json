@@ -1,0 +1,33 @@
+{
+  "extends": "tslint-config-airbnb",
+  "linterOptions": {
+    "exclude": ["./node_modules/**/*", "./packages/*/node_modules/**/*" ]
+  },
+  "rules": {
+    "no-default-export": true,
+    "no-consecutive-blank-lines": [true, 2],
+    "max-line-length": {
+      "severity": "warning",
+      "options": {
+        "limit": 120,
+        "ignore-pattern": "^import |^export {(.*?)}"
+      }
+    },
+    "align": [false],
+    "quotemark": [true, "single", "jsx-double"],
+    "ter-arrow-parens": [true, "as-needed"],
+    "trailing-comma": [true, "never"],
+    "object-shorthand-properties-first": false,
+    "variable-name": [true, "allow-leading-underscore"],
+    "function-name": [true, {
+      "protected-method-regex": "/^_?[a-z$][\\w\\d]+$/",
+      "private-method-regex": "/^_[a-z$][\\w\\d]+$/"
+    }],
+    "import-name": [false, {
+      "react": "React",
+      "react-dom": "ReactDOM"
+    }],
+    "no-console": [true, "log", "error"],
+    "radix": [false]
+  }
+}
