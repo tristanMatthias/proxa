@@ -1,6 +1,7 @@
 # Proxa
 Composable, observable objects and arrays.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/660b3711eff2412591937312ddad52ae)](https://app.codacy.com/app/tristanMatthias/proxa?utm_source=github.com&utm_medium=referral&utm_content=tristanMatthias/proxa&utm_campaign=Badge_Grade_Dashboard)
 [![npm](https://img.shields.io/npm/v/proxa.svg)](http://npmjs.com/package/proxa)
 [![Travis](https://img.shields.io/travis/tristanMatthias/proxa.svg)](https://travis-ci.org/tristanMatthias/proxa)
 [![Codecov](https://img.shields.io/codecov/c/github/tristanMatthias/proxa.svg)](https://codecov.io/gh/tristanMatthias/proxa)
