@@ -5,13 +5,13 @@ const sPropCallbacks = Symbol('proxaPropCallbacks');
 const sParent = Symbol('proxaParent');
 const sIsArray = Symbol('proxaIsArray');
 
-export type ProxaCallback = <T, P extends keyof T>(newValues: T, prop: keyof T, value: T[P]) => any;
+export type ProxaCallback<T> = <P extends keyof T>(newValues: T, prop: keyof T, value: T[P]) => any;
 
 export type ProxyExtended<T> = T & {
   [sIsProxa]: true;
   [sUpdate](prop: keyof T, value: T[keyof T]): void;
-  [sCallbacks]: ProxaCallback[]
-  [sPropCallbacks]: Map<keyof T, ProxaCallback[]>
+  [sCallbacks]: ProxaCallback<T>[]
+  [sPropCallbacks]: Map<keyof T, ProxaCallback<T>[]>
   [sParent]?: ProxyExtended<any>
   [sIsArray]: boolean;
   toJSON: () => T
@@ -34,7 +34,7 @@ const excludeProps = [
  */
 export const proxa = <T extends object>(
   value: T | ProxyExtended<T>,
-  cb?: ProxaCallback,
+  cb?: ProxaCallback<T>,
   cbProperty?: keyof T,
   parent?: ProxyExtended<any>
 ): ProxyExtended<T> => {
@@ -104,8 +104,10 @@ export const proxa = <T extends object>(
         excludeProps.forEach(p => delete copy[p as keyof typeof copy]);
 
         Object.entries(copy).forEach(([key, value]) => {
-          // Recursively call toJSONo on nested proxa proxies
-          if (value && typeof value === 'object' && value[sIsProxa]) copy[key as keyof typeof root] = value.toJSON();
+          // Recursively call toJSON on nested proxa proxies
+          if (
+            value && typeof value === 'object' && value[sIsProxa]
+          ) copy[key as keyof typeof root] = value.toJSON();
         });
 
         if (root[sIsArray]) {
