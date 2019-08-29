@@ -130,6 +130,32 @@ export class RouterComponent extends Something {
 
 ```
 
+
+## `off()`
+
+`off(obj: object, cb: () => any, prop?: string)`
+
+You can remove a callback from an object with the `off()` function.
+
+```typescript
+const someFunction = () => console.log('changed something');
+const obj = proxa({foo: 'bar'}, someFunction);
+obj.foo = 'updated' // Logs 'changed something'
+off(obj, someFunction);
+obj.foo = 'updated again' // Does nothing
+```
+
+You can also remove callbacks from property callbacks in the same way by passing the property
+
+```typescript
+const watchFoo = () => console.log('changed foo');
+const obj = proxa({foo: 'bar'}, watchFoo, 'foo');
+obj.foo = 'updated' // Logs 'changed foo'
+off(obj, watchFoo, 'foo');
+obj.foo = 'updated again' // Does nothing
+```
+
+
 ---
 
 ## Contributing

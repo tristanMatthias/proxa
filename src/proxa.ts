@@ -1,29 +1,25 @@
-const sIsProxa = Symbol('proxa');
-const sUpdate = Symbol('proxaUpdate');
-const sCallbacks = Symbol('proxaCallbacks');
-const sPropCallbacks = Symbol('proxaPropCallbacks');
-const sParent = Symbol('proxaParent');
-const sIsArray = Symbol('proxaIsArray');
+export * from './off';
+import * as s from './symbols';
 
 export type ProxaCallback<T> = <P extends keyof T>(newValues: T, prop: keyof T, value: T[P]) => any;
 
 export type ProxyExtended<T> = T & {
-  [sIsProxa]: true;
-  [sUpdate](prop: keyof T, value: T[keyof T]): void;
-  [sCallbacks]: ProxaCallback<T>[]
-  [sPropCallbacks]: Map<keyof T, ProxaCallback<T>[]>
-  [sParent]?: ProxyExtended<any>
-  [sIsArray]: boolean;
+  [s.isProxa]: true;
+  [s.update](prop: keyof T, value: T[keyof T]): void;
+  [s.callbacks]: ProxaCallback<T>[]
+  [s.propCallbacks]: Map<keyof T, ProxaCallback<T>[]>
+  [s.parent]?: ProxyExtended<any>
+  [s.isArray]: boolean;
   toJSON: () => T
 };
 
 const excludeProps = [
-  sIsProxa,
-  sUpdate,
-  sCallbacks,
-  sPropCallbacks,
-  sParent,
-  sIsArray,
+  s.isProxa,
+  s.update,
+  s.callbacks,
+  s.propCallbacks,
+  s.parent,
+  s.isArray,
   'toJSON'
 ];
 
@@ -49,7 +45,7 @@ export const proxa = <T extends object>(
       const prop = target[key];
 
       // If prop is an object, and not currently a proxa wrapped proxy, wrap it
-      if (prop && !prop[sIsProxa as keyof typeof prop] && typeof prop === 'object') {
+      if (prop && !prop[s.isProxa as keyof typeof prop] && typeof prop === 'object') {
         target[key] = proxa(prop as any, undefined, undefined, root) as unknown as T[keyof T];
       }
 
@@ -63,36 +59,36 @@ export const proxa = <T extends object>(
       target[key] = value;
 
       // Update the parent chain
-      if (!excludeProps.includes(key as string)) target[sUpdate](key, value);
+      if (!excludeProps.includes(key as string)) target[s.update](key, value);
       return true;
     }
   };
 
 
   // If not a proxy, setup the object as a proxa proxy
-  if (!(value as ProxyExtended<T>)[sIsProxa]) {
+  if (!(value as ProxyExtended<T>)[s.isProxa]) {
     // @ts-ignore
     root = new Proxy(value, handler);
 
 
-    root[sIsProxa] = true;
-    root[sCallbacks] = [];
-    root[sPropCallbacks] = new Map();
+    root[s.isProxa] = true;
+    root[s.callbacks] = [];
+    root[s.propCallbacks] = new Map();
 
-    root[sUpdate] = (prop: keyof T, value: any) => {
+    root[s.update] = (prop: keyof T, value: any) => {
       // Call all the registered callbacks (for every prop)
-      root[sCallbacks].forEach(cb => cb(root, prop, value));
+      root[s.callbacks].forEach(cb => cb(root, prop, value));
 
       // Call the callbacks that are watching for only this prop
-      const propCallbacks = root[sPropCallbacks].get(prop);
+      const propCallbacks = root[s.propCallbacks].get(prop);
       if (propCallbacks) propCallbacks.forEach(cb => cb(root, prop, value));
 
       // Update the parent chain
-      if (root[sParent]) root[sParent][sUpdate]();
+      if (root[s.parent]) root[s.parent][s.update]();
     };
 
-    if (parent) root[sParent] = parent;
-    if (value instanceof Array) root[sIsArray] = true;
+    if (parent) root[s.parent] = parent;
+    if (value instanceof Array) root[s.isArray] = true;
 
 
     // Allows for conversion back into plain JSON, and JSON.stringify(root)
@@ -106,11 +102,11 @@ export const proxa = <T extends object>(
         Object.entries(copy).forEach(([key, value]) => {
           // Recursively call toJSON on nested proxa proxies
           if (
-            value && typeof value === 'object' && value[sIsProxa]
+            value && typeof value === 'object' && value[s.isProxa]
           ) copy[key as keyof typeof root] = value.toJSON();
         });
 
-        if (root[sIsArray]) {
+        if (root[s.isArray]) {
           return Object.entries(copy).reduce((arr, [key, v]) => {
             // Only add it if the key is the index of the array (only a number)
             if (/^\d+$/.test(key)) (arr as any[]).push(v);
@@ -131,15 +127,15 @@ export const proxa = <T extends object>(
   // Add the callback to the root if it's not included
   if (cb) {
     // Watch ALL properties
-    if (!cbProperty && !root[sCallbacks].includes(cb)) root[sCallbacks].push(cb);
+    if (!cbProperty && !root[s.callbacks].includes(cb)) root[s.callbacks].push(cb);
 
     // Only watch specific property
     else if (cbProperty) {
-      let cbs = root[sPropCallbacks].get(cbProperty);
+      let cbs = root[s.propCallbacks].get(cbProperty);
       // If property has never been watched before, initialize the array
       if (!cbs) {
         cbs = [];
-        root[sPropCallbacks].set(cbProperty, cbs);
+        root[s.propCallbacks].set(cbProperty, cbs);
       }
       // Add callback to the property map array
       cbs.push(cb);

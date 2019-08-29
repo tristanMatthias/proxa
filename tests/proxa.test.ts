@@ -1,4 +1,4 @@
-import { proxa } from '../src/proxa';
+import { proxa, off } from '../src/proxa';
 
 
 describe('Instantiation', () => {
@@ -146,5 +146,69 @@ describe('toJSON', () => {
     // @ts-ignore
     obj.test = 1;
     expect(JSON.stringify(obj)).toEqual('[1,{"foo":"bar"}]');
+  });
+});
+
+
+describe('off() general callback', () => {
+
+  it('should correctly remove callback', () => {
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+    const obj = proxa({ foo: 'bar', lorem: 'ipsum' }, cb1);
+    proxa(obj, cb2);
+    obj.foo = 'updated';
+    off(obj, cb1);
+    obj.foo = 'again';
+    expect(cb1).toBeCalledTimes(1);
+    expect(cb2).toBeCalledTimes(2);
+  });
+
+  it('should throw error removing callback that is not assigned to object', () => {
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+    const obj = proxa({ foo: 'bar', lorem: 'ipsum' }, cb1);
+    try {
+      off(obj, cb2);
+    } catch (e) {
+      expect(e.message).toEqual('Callback does not exist on this object');
+    }
+  });
+});
+
+
+describe('off() property callback', () => {
+
+  it('should correctly remove callback', () => {
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+    const obj = proxa({ foo: 'bar', lorem: 'ipsum' }, cb1, 'foo');
+    proxa(obj, cb2);
+    obj.foo = 'updated';
+    off(obj, cb1, 'foo');
+    obj.foo = 'again';
+    expect(cb1).toBeCalledTimes(1);
+    expect(cb2).toBeCalledTimes(2);
+  });
+
+  it('should throw error removing callback that is not assigned to property on object', () => {
+    const cb1 = jest.fn();
+    const obj = proxa({ foo: 'bar', lorem: 'ipsum' }, cb1, 'foo');
+    off(obj, cb1, 'foo');
+    try {
+      off(obj, cb1, 'foo');
+    } catch (e) {
+      expect(e.message).toEqual(`Callback does not exist on property 'foo' for this object`);
+    }
+  });
+
+  it('should throw error removing callback for property with no callbacks', () => {
+    const cb1 = jest.fn();
+    const obj = proxa({ foo: 'bar', lorem: 'ipsum' }, cb1, 'foo');
+    try {
+      off(obj, cb1, 'lorem');
+    } catch (e) {
+      expect(e.message).toEqual(`Could not find any callbacks for property 'lorem'`);
+    }
   });
 });
