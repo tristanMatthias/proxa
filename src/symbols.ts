@@ -3,4 +3,5 @@ export const update = Symbol('proxaUpdate');
 export const callbacks = Symbol('proxaCallbacks');
 export const propCallbacks = Symbol('proxaPropCallbacks');
 export const parent = Symbol('proxaParent');
+export const parentProperty = Symbol('proxaParentProperty');
 export const isArray = Symbol('proxaIsArray');

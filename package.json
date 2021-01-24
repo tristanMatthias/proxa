@@ -10,6 +10,7 @@
   "author": "Tristan Matthias <hello@tristanmatthias.com>",
   "license": "MIT",
   "scripts": {
+    "dev": "yarn build --watch",
     "build": "rollup -c ./rollup.config.ts",
     "test": "jest --coverage"
   },

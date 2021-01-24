@@ -1,5 +1,5 @@
 import { proxa, off } from '../src/proxa';
-
+import * as s from '../src/symbols';
 
 describe('Instantiation', () => {
   it('should correctly wrap object', () => {
@@ -33,6 +33,25 @@ describe('wrapping already wrapped proxa', () => {
     const deep = proxa(obj.lorem);
     expect(deep.ipsum).toEqual('dolor');
   });
+
+  it('should call both callbacks for an existing proxa', async () => {
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+
+    const root = proxa({ foo: 'bar', lorem: { ipsum: 'dolor' } });
+    const p1 = proxa(root, cb1);
+    const p2 = proxa(root, cb2);
+
+    p1.foo = 'updated1';
+    expect(cb1).toHaveBeenCalledTimes(1);
+    expect(cb2).toHaveBeenCalledTimes(1);
+    expect(p2.foo).toEqual('updated1');
+
+    p2.foo = 'updated2';
+    expect(cb1).toHaveBeenCalledTimes(2);
+    expect(cb2).toHaveBeenCalledTimes(2);
+    expect(p1.foo).toEqual('updated2');
+  });
 });
 
 
@@ -52,12 +71,12 @@ describe('General Callbacks', () => {
     expect(cb).toBeCalledTimes(1);
   });
 
-  it('should correctly call callback for nested proxa', () => {
+  it('should correctly call parent callback for nested proxa', () => {
     const cb1 = jest.fn();
     const cb2 = jest.fn();
-    const obj = proxa({ foo: 'bar', lorem: { ipsum: 'dolor' } }, cb1);
-    proxa(obj.lorem, cb2);
-    obj.lorem.ipsum = 'updated';
+    const parent = proxa({ foo: 'bar', lorem: { ipsum: 'dolor' } }, cb1);
+    proxa(parent.lorem, cb2);
+    parent.lorem.ipsum = 'updated';
     expect(cb1).toBeCalledTimes(1);
     expect(cb2).toBeCalledTimes(1);
   });
@@ -210,5 +229,30 @@ describe('off() property callback', () => {
     } catch (e) {
       expect(e.message).toEqual(`Could not find any callbacks for property 'lorem'`);
     }
+  });
+});
+
+
+describe('Parent callbacks', () => {
+  it('should call parent callback on nested property change', () => {
+    const obj = { foo: 'bar', lorem: 'ipsum', nested: { dolor: 'set' } }
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+    const parent = proxa(obj, cb1);
+    const child = proxa(parent.nested, cb2);
+    child.dolor = 'amit';
+    expect(cb1).toHaveBeenCalledTimes(1);
+    expect(cb2).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call parent callback on nested property change', () => {
+    const obj = [0, 1, [2, 3]];
+    const cb1 = jest.fn();
+    const cb2 = jest.fn();
+    const parent = proxa(obj, cb1);
+    const child = proxa(parent[2] as number[], cb2);
+    child[2] = 4;
+    expect(cb1).toHaveBeenCalledTimes(1);
+    expect(cb2).toHaveBeenCalledTimes(1);
   });
 });

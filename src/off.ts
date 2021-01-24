@@ -1,4 +1,4 @@
-import { ProxyExtended, ProxaCallback } from './proxa';
+import { Proxa, ProxaCallback } from './proxa';
 import * as s from './symbols';
 
 export const off = <T>(
@@ -6,7 +6,7 @@ export const off = <T>(
   cb: ProxaCallback<T>,
   prop?: keyof T
 ) => {
-  const pObj = obj as ProxyExtended<T>;
+  const pObj = obj as Proxa<T>;
 
   // Delete callbacks callback
   if (!prop) {
